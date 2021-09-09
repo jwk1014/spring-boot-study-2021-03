@@ -57,13 +57,10 @@ public class AppConfig {
                 .serializationInclusion(JsonInclude.Include.NON_NULL)
                 .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
                 .featuresToDisable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-                .featuresToEnable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL);
+                .featuresToEnable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL)
+                .serializers(new ZonedDateTimeSerializer(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+                .deserializers(new JacksonZonedDatetimeDeserializer(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
     }
-
-
-//                .serializers(new ZonedDateTimeSerializer(DateTimeFormatter.ISO_ZONED_DATE_TIME))
-//                .deserializers(new JacksonZonedDatetimeDeserializer(DateTimeFormatter.ISO_ZONED_DATE_TIME));
-//    }
 
     public static final class JacksonZonedDatetimeDeserializer extends InstantDeserializer<ZonedDateTime> {
         public JacksonZonedDatetimeDeserializer(final DateTimeFormatter dateTimeFormatter) {
