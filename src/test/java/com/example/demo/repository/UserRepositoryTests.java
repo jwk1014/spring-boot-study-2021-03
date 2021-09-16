@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
+
 @SpringBootTest
 public class UserRepositoryTests {
     @Autowired
@@ -22,5 +24,14 @@ public class UserRepositoryTests {
                 .build();
 
         userRepository.save(user);
+    }
+
+    @Test
+    public void findByEmailLike() {
+        final List<User> userList = userRepository.findByEmailLike("test.com");
+
+        for(User user : userList) {
+            System.out.println(user.getName() + " / " + user.getEmail());
+        }
     }
 }

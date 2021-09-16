@@ -27,7 +27,7 @@ public class RUserSign {
         @Pattern(regexp = Constant.PASSWORD_REGEX)
         private String password;
         @NotBlank
-        @Pattern(regexp = "^[A-Za-z가-힣\\s]+$")
+        @Pattern(regexp = Constant.NAME_REGEX)
         private String name;
     }
 }

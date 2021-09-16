@@ -20,6 +20,11 @@ dependencies {
 	implementation 'org.springframework.session:spring-session-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 
+	implementation 'com.querydsl:querydsl-jpa:4.4.0'
+	annotationProcessor 'javax.persistence:javax.persistence-api'
+	annotationProcessor 'javax.annotation:javax.annotation-api'
+	annotationProcessor 'com.querydsl:querydsl-apt:4.4.0:jpa'
+
 	implementation 'org.apache.tika:tika-core:2.1.0'
 
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
@@ -34,4 +39,12 @@ dependencies {
 
 test {
 	useJUnitPlatform()
+}
+
+sourceSets {
+	main {
+		java {
+			srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
+		}
+	}
 }

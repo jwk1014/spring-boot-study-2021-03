@@ -37,6 +37,7 @@ public class UserService implements UserDetailsService {
         final User user = User.builder()
                 .email(req.getEmail())
                 .password(passwordEncoder.encode(req.getPassword()))
+                .name(req.getName())
                 .build();
 
         try {

@@ -124,4 +124,14 @@ public class PostRepositoryTests {
                     +post.getUser().getName());
         });
     }
+
+    @Transactional
+    @Test
+    public void findByTitleLike() {
+        List<Post> postList = postRepository.findByTitleLike("test");
+
+        for(Post post : postList) {
+            System.out.println("id "+post.getId()+" title "+post.getTitle()+" / user name : "+post.getUser().getName());
+        }
+    }
 }

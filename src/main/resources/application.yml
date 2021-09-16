@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: ${SERVER_PORT:8081}
 spring:
   datasource:
     platform: mysql
@@ -16,9 +16,3 @@ logging:
         web:
           filter:
             CommonsRequestLoggingFilter: DEBUG
-      hibernate:
-        SQL: DEBUG
-        type:
-          descriptor:
-            sql:
-              BasicBinder: TRACE
