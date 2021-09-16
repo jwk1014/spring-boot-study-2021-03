@@ -1,5 +1,5 @@
 server:
-  port: ${SERVER_PORT:8081}
+  port: 8081
 spring:
   datasource:
     platform: mysql
@@ -16,3 +16,15 @@ logging:
         web:
           filter:
             CommonsRequestLoggingFilter: DEBUG
+
+---
+server:
+  port: 80
+spring:
+  config:
+    active:
+      on-profile: prod
+  datasource:
+    url: jdbc:mysql://ls-15a7d8f1c59c7a27476747ae67db4e801507eab8.cjynkhhf987n.ap-northeast-2.rds.amazonaws.com:3306/test?autoReconnect=true&useSSL=false
+upload:
+  rootPath: /home/centos/demo-upload/
