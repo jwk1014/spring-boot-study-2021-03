@@ -16,7 +16,7 @@ logging:
         web:
           filter:
             CommonsRequestLoggingFilter: DEBUG
-
+ 
 ---
 server:
   port: 80
