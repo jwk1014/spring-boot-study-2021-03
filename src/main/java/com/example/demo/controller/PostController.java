@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
 import com.example.demo.httpException.ResponseError;
+import com.example.demo.httpException.ResponseException;
 import com.example.demo.model.entity.Post;
 import com.example.demo.model.entity.User;
+import com.example.demo.model.req.PageRes;
 import com.example.demo.model.req.RPost;
 import com.example.demo.service.PostService;
 import io.swagger.annotations.ApiOperation;
@@ -13,10 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -33,22 +32,19 @@ public class PostController {
     // @RequestMapping(method = RequestMethod.GET, value = "/posts")
     @ApiOperation("Post 리스트 조회")
     @GetMapping("/posts")
-    public List<RPost.ListGetRes> getPostList(
-            @RequestParam(value = "query", required = false) String query
+    public PageRes<RPost.ListGetRes> getPostList(
+            @RequestParam(value="query", required = false) String query,
+            @RequestParam(value="page", required = false, defaultValue = "1") Integer page,
+            @RequestParam(value="size", required = false, defaultValue = "10") Integer size
+            // @Valid RPost.ListGetReq req
     ) {
-        log.info("query : " + query);
+        log.info("query : {} / page : {} / size : {}", query, page, size);
 
-        return postService.getPostList()
-                .stream()
-                .map(post -> RPost.ListGetRes.builder()
-                        .id(post.getId())
-                        .title(post.getTitle())
-                        .user(RPost.GetUserRes.builder()
-                                .id(post.getUser().getId())
-                                .name(post.getUser().getName())
-                                .build())
-                        .build())
-                .collect(Collectors.toList());
+        if(page < 1 || size < 1 || size > 50) {
+            throw ResponseError.BadRequest.BAD_REQUEST.getResponseException();
+        }
+
+        return postService.getPostList(query, page, size);
     }
 
     // [GET] /api/v1/posts/{id}

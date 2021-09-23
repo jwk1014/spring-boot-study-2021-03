@@ -4,6 +4,7 @@ import com.example.demo.httpException.ResponseError;
 import com.example.demo.model.entity.Post;
 import com.example.demo.model.entity.PostImage;
 import com.example.demo.model.entity.User;
+import com.example.demo.model.req.PageRes;
 import com.example.demo.model.req.RPost;
 import com.example.demo.repository.PostImageRepository;
 import com.example.demo.repository.PostRepository;
@@ -11,6 +12,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +27,7 @@ import java.time.temporal.ChronoField;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -34,8 +39,29 @@ public class PostService {
     @Value("${upload.rootPath}")
     private String uploadRootPath;
 
-    public List<Post> getPostList() {
-        return postRepository.findAll();
+    public PageRes<RPost.ListGetRes> getPostList(final String titleQuery, final Integer page, final Integer size) {
+        final Pageable pageable = PageRequest.of(page - 1, size);
+
+        final Page<Post> postPage = postRepository.findByTitleLikePageable(titleQuery, pageable);
+
+        final List<RPost.ListGetRes> list = postPage.getContent()
+                .stream()
+                .map(post -> RPost.ListGetRes.builder()
+                        .id(post.getId())
+                        .title(post.getTitle())
+                        .user(RPost.GetUserRes.builder()
+                                .id(post.getUser().getId())
+                                .name(post.getUser().getName())
+                                .build())
+                        .build())
+                .collect(Collectors.toList());
+
+        return PageRes.<RPost.ListGetRes>builder()
+                .list(list)
+                .page(page)
+                .size(size)
+                .lastPage(postPage.getTotalPages())
+                .build();
     }
 
     public Post getPost(final Long id) {

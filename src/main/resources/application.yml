@@ -1,14 +1,9 @@
-server:
-  port: 8081
 spring:
   datasource:
     platform: mysql
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/test?autoReconnect=true&useSSL=false
     username: test
     password: test
-upload:
-  rootPath: /
 logging:
   level:
     org:
@@ -18,13 +13,25 @@ logging:
             CommonsRequestLoggingFilter: DEBUG
 
 ---
-server:
-  port: 80
 spring:
   config:
-    active:
+    activate:
+      on-profile: default
+  datasource:
+    url: jdbc:mysql://localhost:3306/test?autoReconnect=true&useSSL=false
+upload:
+  rootPath: /
+server:
+  port: 8081
+
+---
+spring:
+  config:
+    activate:
       on-profile: prod
   datasource:
     url: jdbc:mysql://ls-15a7d8f1c59c7a27476747ae67db4e801507eab8.cjynkhhf987n.ap-northeast-2.rds.amazonaws.com:3306/test?autoReconnect=true&useSSL=false
 upload:
   rootPath: /home/centos/demo-upload/
+server:
+  port: 80
