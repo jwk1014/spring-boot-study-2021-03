@@ -3,6 +3,7 @@ package com.example.demo.model.req;
 import com.example.demo.model.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,6 +35,16 @@ public class RPost {
         @JsonProperty("testContent")
         private String content;
         private GetUserRes user;
+    }
+
+    @Getter
+    public static class ListGetReq {
+        private String query;
+        @Positive
+        private Integer page;
+        @Positive
+        @Max(50L)
+        private Integer size;
     }
 
     @Getter

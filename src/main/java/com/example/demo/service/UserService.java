@@ -21,7 +21,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements UserDetailsService {
+public class UserService {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
@@ -55,21 +55,5 @@ public class UserService implements UserDetailsService {
 
             throw e;
         }
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        final User user = userRepository.findByEmail(username);
-
-        if(user == null) {
-            return null;
-        }
-
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getEmail())
-                .password(user.getPassword())
-                .roles("USER")
-                .build();
     }
 }

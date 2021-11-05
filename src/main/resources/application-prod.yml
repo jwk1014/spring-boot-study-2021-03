@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: jdbc:mysql://ls-15a7d8f1c59c7a27476747ae67db4e801507eab8.cjynkhhf987n.ap-northeast-2.rds.amazonaws.com:3306/test?autoReconnect=true&useSSL=false
+upload:
+  rootPath: /home/centos/demo-upload/
+server:
+  port: 80

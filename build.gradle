@@ -1,4 +1,5 @@
 plugins {
+	id 'com.github.node-gradle.node' version '3.1.1'
 	id 'org.springframework.boot' version '2.5.4'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
@@ -12,6 +13,28 @@ repositories {
 	mavenCentral()
 }
 
+node {
+	version = "14.17.6"
+	npmVersion = "7.24.0"
+	download = true
+	workDir = file("${projectDir}/build")
+	npmWorkDir = file("${projectDir}/build")
+	nodeProjectDir = file("${projectDir}/web")
+}
+
+task clientBuild(type: NpmTask) {
+	args = ["run", "build"]
+}
+
+task copyWebApp(type: Copy) {
+	from "${projectDir}/web/build"
+	into "${projectDir}/build/resources/main/static/."
+}
+
+//clientBuild.dependsOn(npmInstall)
+//copyWebApp.dependsOn(clientBuild)
+//compileJava.dependsOn(copyWebApp)
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
@@ -19,7 +42,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.session:spring-session-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-aop'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	implementation 'org.springframework.kafka:spring-kafka'
 
+
+	// QueryDSL
 	implementation 'com.querydsl:querydsl-jpa:4.4.0'
 	annotationProcessor 'javax.persistence:javax.persistence-api'
 	annotationProcessor 'javax.annotation:javax.annotation-api'

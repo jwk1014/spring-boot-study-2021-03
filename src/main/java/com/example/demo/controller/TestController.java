@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Locale;
 import java.util.Map;
 
 @RestController
@@ -29,5 +30,15 @@ public class TestController {
        return new Res(
                testService.getTest(id)
        );
+    }
+
+    @GetMapping("/test/async")
+    public void testAsync() {
+        testService.testAsync();
+    }
+
+    @GetMapping("/test/name")
+    public Map<String, String> testName(final Locale locale) {
+        return Map.of("name", testService.getName(locale));
     }
 }

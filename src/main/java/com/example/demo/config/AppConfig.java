@@ -8,8 +8,11 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -17,13 +20,32 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 @Configuration
 public class AppConfig {
+
+    @Bean
+    public MessageSource messageSource() {
+        final ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+        messageSource.setBasename("classpath:messages/messages");
+        messageSource.setDefaultEncoding(StandardCharsets.UTF_8.name());
+        return messageSource;
+    }
+
+    @Bean
+    public LocaleResolver localeResolver() {
+        AcceptHeaderLocaleResolver localeResolver = new AcceptHeaderLocaleResolver();
+        localeResolver.setDefaultLocale(Locale.KOREA);
+        return localeResolver;
+    }
 
     @Bean
     public CommonsRequestLoggingFilter logFilter() {
@@ -53,7 +75,7 @@ public class AppConfig {
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
         return builder -> builder
-                .propertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
+                //.propertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
                 .serializationInclusion(JsonInclude.Include.NON_NULL)
                 .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
                 .featuresToDisable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)

@@ -7,7 +7,20 @@
         </encoder>
     </appender>
 
+    <appender name="STDOUT-APILOG" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+
     <root level="info">
-        <appender-ref ref="STDOUT" />
+        <springProfile name="default">
+            <appender-ref ref="STDOUT" />
+        </springProfile>
     </root>
+
+    <logger name="com.example.demo.common.ApiLogFilter" level="info">
+        <appender-ref ref="STDOUT-APILOG" />
+    </logger>
 </configuration>
